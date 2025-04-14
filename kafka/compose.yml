@@ -1,0 +1,155 @@
+services:
+  kafka-ui:
+    container_name: kafka-ui
+    image: provectuslabs/kafka-ui:latest
+    ports:
+      - 8080:8080
+    environment:
+      DYNAMIC_CONFIG_ENABLED: false
+      KAFKA_CLUSTERS_0_NAME: broker1
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: broker1:9092
+      KAFKA_CLUSTERS_1_NAME: broker2
+      KAFKA_CLUSTERS_1_BOOTSTRAPSERVERS: broker2:9093
+    networks:
+      - ms-network
+    depends_on:
+      broker1:
+        condition: service_healthy
+      broker2:
+        condition: service_healthy
+      kafka-initializer:
+        condition: service_completed_successfully
+
+  broker1:
+    container_name: broker1
+    image: &kafka apache/kafka:3.8.0
+    ports:
+      - 9092:9092
+    volumes:
+      - ./docker/broker1:/var/lib/kafka/data
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_BROKER_ID: 1
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_CONTROLLER_LISTNER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_LISTENERS: INTERNAL://broker1:29092,CONTROLLER://broker1:29093,EXTERNAL://broker1:9092
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://broker1:29092,EXTERNAL://broker1:9092
+      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@broker1:29093,2@broker2:29093
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_OFFSET_TOPIC_REPLICATION_FACTOR: 2
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: true
+      KAFKA_OFFSETS_STORAGE: kafka
+      KAFKA_LOG_DIRS: /tmp/kafka/logs
+      KAFKA_MIN_INSYNC_REPLICAS: 1
+      CLUSTER_ID: kafka-cluster
+    networks:
+      - ms-network
+    depends_on:
+      - zookeeper
+    healthcheck:
+      test: ["CMD", "/opt/kafka/bin/kafka-topics.sh", "--bootstrap-server", "broker1:9092", "--list"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+
+  broker2:
+    container_name: broker2
+    image: apache/kafka:3.8.0
+    ports:
+      - 9093:9093
+    volumes:
+      - ./docker/broker2:/var/lib/kafka/data
+    environment:
+      KAFKA_NODE_ID: 2
+      KAFKA_BROKER_ID: 2
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_CONTROLLER_LISTNER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_LISTENERS: INTERNAL://broker2:29092,CONTROLLER://broker2:29093,EXTERNAL://broker2:9093
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://broker2:29092,EXTERNAL://broker2:9093
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@broker1:29093,2@broker2:29093
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_OFFSET_TOPIC_REPLICATION_FACTOR: 2
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: true
+      KAFKA_LOG_DIRS: /tmp/kafka/logs
+      KAFKA_OFFSETS_STORAGE: kafka
+      KAFKA_MIN_INSYNC_REPLICAS: 1
+      CLUSTER_ID: kafka-cluster
+    networks:
+      - ms-network
+    depends_on:
+      - zookeeper
+    healthcheck:
+      test: ["CMD", "/opt/kafka/bin/kafka-topics.sh", "--bootstrap-server", "broker2:9093", "--list"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+
+  kafka-initializer:
+    container_name: kafka-initializer
+    image: *kafka
+    working_dir: /opt/kafka/bin
+    networks:
+      - ms-network
+    depends_on:
+      broker1:
+        condition: service_healthy
+      broker2:
+        condition: service_healthy
+    command: >
+      /bin/bash -c "
+      /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic __consumer_offsets --replication-factor=2 --partitions=50 --bootstrap-server broker1:9092 &&
+      /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic dbserver1 --replication-factor=1 --partitions=1 --bootstrap-server broker1:9092 &&
+      /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic dbserver1.ms_db.carts --replication-factor=1 --partitions=1 --bootstrap-server broker1:9092 &&
+      /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic dbserver1.ms_db.carts.reply --replication-factor=1 --partitions=1 --bootstrap-server broker1:9092 &&
+      /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic dbserver1.ms_db.cart_items --replication-factor=1 --partitions=1 --bootstrap-server broker1:9092 &&
+      /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic dbserver2 --replication-factor=1 --partitions=1 --bootstrap-server broker1:9092 &&
+      /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic dbserver2.ms_db.carts --replication-factor=1 --partitions=1 --bootstrap-server broker1:9092 &&
+      /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic dbserver2.ms_db.carts.reply --replication-factor=1 --partitions=1 --bootstrap-server broker1:9092 &&
+      /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic dbserver2.ms_db.cart_items --replication-factor=1 --partitions=1 --bootstrap-server broker1:9092 &&
+      /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic my-connect-configs --replication-factor=1 --partitions=1 --config cleanup.policy=compact --bootstrap-server broker1:9092 &&
+      /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic my-connect-offsets --replication-factor=1 --partitions=1 --config cleanup.policy=compact --bootstrap-server broker1:9092 &&
+      /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic my-connect-statuses --replication-factor=1 --partitions=1 --config cleanup.policy=compact --bootstrap-server broker1:9092
+      "
+
+  debezium:
+    platform: linux/x86_64
+    image: debezium/connect:2.6
+    container_name: debezium
+    ports:
+      - '8083:8083'
+    networks:
+      - ms-network
+    depends_on:
+      broker1:
+        condition: service_healthy
+      broker2:
+        condition: service_healthy
+    environment:
+      - BOOTSTRAP_SERVERS=broker1:9092,broker2:9093
+      - GROUP_ID=1
+      - CONFIG_STORAGE_TOPIC=my-connect-configs
+      - OFFSET_STORAGE_TOPIC=my-connect-offsets
+      - STATUS_STORAGE_TOPIC=my-connect-statuses
+
+  zookeeper:
+    platform: linux/x86_64
+    image: wurstmeister/zookeeper:latest
+    container_name: zookeeper
+    ports:
+      - '2181:2181'
+    networks:
+      - ms-network
+
+networks:
+  ms-network:
+    driver: bridge
+    name: ms-network

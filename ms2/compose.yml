@@ -1,0 +1,44 @@
+services:
+  ms2-app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev
+    container_name: ms2-app
+    ports:
+      - 3334:3010
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    networks:
+      - ms-network
+    depends_on:
+      ms2-mysql:
+        condition: service_healthy
+    command: npm run start:dev
+
+  ms2-mysql:
+    platform: linux/x86_64
+    image: mysql:8.0
+    container_name: ms2-mysql
+    ports:
+      - 3307:3306
+    volumes:
+      - ./mysql/my.cnf:/etc/mysql/my.cnf
+      - /var/lib/mysql
+    networks:
+      - ms-network
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ms_db
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+
+networks:
+  ms-network:
+    driver: bridge
+    name: ms-network
