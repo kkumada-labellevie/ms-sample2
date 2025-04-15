@@ -5,10 +5,6 @@ import { ThisError } from '../../../../error/this-error';
  * アダプタが実装する
  */
 export interface SaveCartPort {
-  findAll();
-
-  findOne(id: number);
-
   save(cart: {
     userUuid: string;
     cartCode: string;

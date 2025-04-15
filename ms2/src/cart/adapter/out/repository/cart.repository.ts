@@ -1,11 +1,12 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { MySql2Database } from 'drizzle-orm/mysql2';
 import { eq } from 'drizzle-orm';
+import { FindCartPort } from 'src/cart/application/port/out/find-cart.port';
 import { SaveCartPort } from '../../../application/port/out/save-cart.port';
 import * as schema from '../../../../db/schema';
 
 @Injectable()
-export class CartRepository implements SaveCartPort {
+export class CartRepository implements FindCartPort, SaveCartPort {
   constructor(
     @Inject('DB_DEV') private readonly drizzle: MySql2Database<typeof schema>,
   ) {}
@@ -50,8 +51,6 @@ export class CartRepository implements SaveCartPort {
           ...item,
         });
     }
-
-    console.log('Cart saved');
   }
 
   async saveCart(cart: {
@@ -66,8 +65,6 @@ export class CartRepository implements SaveCartPort {
         userUuid: cart.userUuid,
         cartCode: cart.cartCode,
       });
-
-    console.log('Cart saved');
   }
 
   async saveCartItem(cartItem: {
@@ -86,7 +83,5 @@ export class CartRepository implements SaveCartPort {
         quantity: cartItem.quantity,
         cartId: cartItem.cartId,
       });
-
-    console.log('Cart Item saved');
   }
 }
