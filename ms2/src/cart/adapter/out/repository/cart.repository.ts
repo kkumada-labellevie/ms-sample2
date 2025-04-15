@@ -11,15 +11,22 @@ export class CartRepository implements SaveCartPort {
   ) {}
 
   async findAll() {
-    return await this.drizzle.query.carts.findMany();
+    return await this.drizzle.query.carts.findMany({
+      with: {
+        cartItems: true,
+      },
+    });
   }
 
   async findOne(id: number) {
-    const carts = await this.drizzle.select()
-      .from(schema.carts)
-      .where(eq(schema.carts.id, id))
-      .limit(1);
-    return carts[0];
+    return await this.drizzle.query.carts.findFirst({
+      with: {
+        cartItems: true,
+      },
+      where(fields) {
+        return eq(fields.id, id);
+      },
+    });
   }
 
   async save(cart: {
