@@ -1,0 +1,19 @@
+services:
+  bff:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev
+    container_name: bff
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    networks:
+      - ms-network
+    command: npm run dev
+
+networks:
+  ms-network:
+    driver: bridge
+    name: ms-network

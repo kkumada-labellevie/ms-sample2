@@ -5,7 +5,7 @@ services:
       dockerfile: docker/Dockerfile.dev
     container_name: ms2-app
     ports:
-      - 3334:3010
+      - 3334:3000
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
