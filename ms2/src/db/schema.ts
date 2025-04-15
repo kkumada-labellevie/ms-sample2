@@ -7,8 +7,8 @@ export const carts = mysqlTable('carts', {
   cartCode: varchar('cart_code', { length: 256 }),
 });
 
-export const cartsRelations = relations(carts, ({ one }) => ({
-	cartItems: one(cartItems),
+export const cartsRelations = relations(carts, ({ many }) => ({
+	cartItems: many(cartItems),
 }));
 
 export const cartItems = mysqlTable('cart_items', {

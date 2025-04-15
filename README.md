@@ -1,7 +1,7 @@
 ## 起動メモ (後でDockerで設定する)
 ### Kafka起動
 `cd ms-sample/kafka`  
-`docker compose up -d`  
+`docker compose up`  
 ### ms1起動
 `cd ms-sample/ms1`  
 `docker compose up --build`  
@@ -18,7 +18,7 @@
 `FLUSH PRIVILEGES;`  
 `exit`  
 `exit`  
-### ms1のDBとDebeziumの連携
+### ms1DBとDebeziumの連携
 ```
 curl -X POST -H "Content-Type: application/json" \
 --data '{
@@ -60,7 +60,7 @@ http://localhost:8083/connectors
 `FLUSH PRIVILEGES;`  
 `exit`  
 `exit`  
-### ms2のDBとDebeziumの連携
+### ms2DBとDebeziumの連携
 ```
 curl -X POST -H "Content-Type: application/json" \
 --data '{
@@ -86,3 +86,6 @@ curl -X POST -H "Content-Type: application/json" \
 }' \
 http://localhost:8083/connectors
 ```
+### bff起動
+`cd ms-sample/bff`  
+`docker compose up --build`  

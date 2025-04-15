@@ -1,7 +1,6 @@
 import { Controller, Param, Get, Inject } from '@nestjs/common';
-import { SaveCartPort } from '../../../application/port/out/save-cart.port';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { AddToCartUseCase } from '../../../application/port/in/add-to-cart.usecase';
+import { CartRepository } from '../../out/repository/cart.repository';
 
 /**
  * APIのエンドポイント
@@ -10,19 +9,18 @@ import { AddToCartUseCase } from '../../../application/port/in/add-to-cart.useca
 export class AddToCartController {
   // APIが実行すべきユースケースをDIする
   constructor(
-    @Inject('AddToCartService') private readonly addToCartService: AddToCartUseCase,
-    @Inject('CartRepository') private readonly cartRepository: SaveCartPort,
+    @Inject('CartRepository') private readonly cartRepository: CartRepository,
   ) {}
 
   @Get()
   // @TODO 本来はもっと実装が必要
-  public async getToCarts(): Promise<void> {
+  public async getToCarts() {
     return this.cartRepository.findAll();
   }
 
   @Get(':userId')
   // @TODO 本来はもっと実装が必要
-  public async getToCart(@Param('userId') id: number): Promise<void> {
+  public async getToCart(@Param('userId') id: number) {
     return this.cartRepository.findOne(id);
   }
 
