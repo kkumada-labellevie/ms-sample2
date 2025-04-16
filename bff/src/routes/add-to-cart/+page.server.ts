@@ -20,10 +20,6 @@ export const actions: Actions = {
       }),
     });
 
-    const data = await response.json();
-
-    return {
-      success: true,
-    };
+    return await response.json();
   },
 };

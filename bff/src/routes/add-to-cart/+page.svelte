@@ -31,5 +31,5 @@
     <span class="w-[120px]">sku.price</span>
     <input class="flex-1" type="number" name="price" value="60000">
   </label>
-  <button class="w-[200px] bg-blue-500 text-white cursor-pointer p-2 m-auto" type="submit">SEND</button>
+  <button class="w-[200px] bg-blue-500 text-white transition-all cursor-pointer p-2 m-auto hover:bg-blue-700" type="submit">SEND</button>
 </form>

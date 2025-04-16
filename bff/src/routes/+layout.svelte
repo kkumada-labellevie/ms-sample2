@@ -6,10 +6,20 @@
 
 <nav class="flex flex-col gap-2 mb-10">
   <h2 class="text-lg">Nonavigation</h2>
-  <a href="/" class="text-blue-700 underline hover:no-underline">Home</a>
-  <a href="/add-to-cart" class="text-blue-700 underline hover:no-underline">Add cart</a>
-  <a href="/get-to-cart" class="text-blue-700 underline hover:no-underline">Get carts</a>
-  <a href="/get-to-cart/1" class="text-blue-700 underline hover:no-underline">Get cart ( /get-to-cart/[id] )</a>
+  <ul>
+    <li>
+      <a href="/" class="text-blue-700 underline hover:no-underline">Home</a>
+    </li>
+    <li>
+      <a href="/add-to-cart" class="text-blue-700 underline hover:no-underline">Add cart</a>
+    </li>
+    <li>
+      <a href="/get-to-cart" class="text-blue-700 underline hover:no-underline">Get carts</a>
+    </li>
+    <li>
+      <a href="/get-to-cart/1" class="text-blue-700 underline hover:no-underline">Get cart<span class="pl-2"> /get-to-cart/[id]</span></a>
+    </li>
+  </ul>
 </nav>
 
 {@render children()}

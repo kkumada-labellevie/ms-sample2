@@ -2,12 +2,12 @@
   import type { PageProps } from './$types';
 
   let { data }: PageProps = $props();
-  let cart = data.cart;
+  let { cart } = data;
 </script>
 
-<h1 class="text-xl  mb-4">Get Cart Page</h1>
+<h1 class="text-xl mb-4">Get Cart Page</h1>
 
-<table class="border">
+<table class="w-full border">
   <thead>
     <tr class="border">
       <th class="border p-4">id</th>
@@ -22,17 +22,17 @@
       <td class="border p-4">{cart.userUuid}</td>
       <td class="border p-4">{cart.cartCode}</td>
       <td class="border p-4">
-        {#each cart.cartItems as cartItems}
-          <div class="flex flex-col gap-4">
+        <div class="flex flex-col gap-4">
+          {#each cart.cartItems as cartItem}
             <ul class="bg-blue-100 p-4">
-              <li>id: {cartItems.id}</li>
-              <li>skuCode: {cartItems.skuCode}</li>
-              <li>price: {cartItems.price}</li>
-              <li>quantity: {cartItems.quantity}</li>
-              <li>cartId: {cartItems.cartId}</li>
+              <li>id: {cartItem.id}</li>
+              <li>skuCode: {cartItem.skuCode}</li>
+              <li>price: {cartItem.price}</li>
+              <li>quantity: {cartItem.quantity}</li>
+              <li>cartId: {cartItem.cartId}</li>
             </ul>
-          </div>
-        {/each}
+          {/each}
+        </div>
       </td>
     </tr>
   </tbody>
