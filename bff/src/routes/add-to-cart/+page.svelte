@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type { PageProps } from './$types';
+  import type { PageProps } from './$types';
 
-	let { form }: PageProps = $props();
+  let { form }: PageProps = $props();
 </script>
 
 <h1 class="text-xl mb-4">Add Cart Page</h1>

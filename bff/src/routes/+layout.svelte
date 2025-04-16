@@ -1,7 +1,7 @@
 <script lang="ts">
-	import '../app.css';
+  import '../app.css';
 
-	let { children } = $props();
+  let { children } = $props();
 </script>
 
 <nav class="flex flex-col gap-2 mb-10">
