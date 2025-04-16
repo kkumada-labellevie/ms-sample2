@@ -24,7 +24,7 @@
       <td class="border p-4">
         {#each cart.cartItems as cartItems}
           <div class="flex flex-col gap-4">
-            <ul class="bg-gray-100 p-4">
+            <ul class="bg-blue-100 p-4">
               <li>id: {cartItems.id}</li>
               <li>skuCode: {cartItems.skuCode}</li>
               <li>price: {cartItems.price}</li>

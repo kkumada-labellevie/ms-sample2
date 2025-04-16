@@ -4,7 +4,7 @@ export const actions: Actions = {
   default: async (event) => {
     const formData = await event.request.formData();
 
-    const response = await fetch('http://ms1-app:3000/add-to-cart', {
+    const response = await event.fetch('/api/add-to-cart', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -19,6 +19,8 @@ export const actions: Actions = {
         },
       }),
     });
+
+    const data = await response.json();
 
     return {
       success: true,
