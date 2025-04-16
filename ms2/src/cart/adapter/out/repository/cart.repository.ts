@@ -35,15 +35,13 @@ export class CartRepository implements FindCartPort, SaveCartPort {
     cartCode: string;
     items: { skuCode: string; price: number; quantity: number }[];
   }): Promise<void> {
+    const { userUuid, cartCode, items } = cart;
     const carts = await this.drizzle
       .insert(schema.carts)
-      .values({
-        userUuid: cart.userUuid,
-        cartCode: cart.cartCode,
-      })
+      .values({ userUuid, cartCode })
       .$returningId();
 
-    for (const item of cart.items) {
+    for (const item of items) {
       await this.drizzle
         .insert(schema.cartItems)
         .values({
@@ -60,11 +58,7 @@ export class CartRepository implements FindCartPort, SaveCartPort {
   }): Promise<void> {
     const carts = await this.drizzle
       .insert(schema.carts)
-      .values({
-        id: cart.id,
-        userUuid: cart.userUuid,
-        cartCode: cart.cartCode,
-      });
+      .values({ ...cart });
   }
 
   async saveCartItem(cartItem: {
@@ -76,12 +70,6 @@ export class CartRepository implements FindCartPort, SaveCartPort {
   }): Promise<void> {
     await this.drizzle
       .insert(schema.cartItems)
-      .values({
-        id: cartItem.id,
-        skuCode: cartItem.skuCode,
-        price: cartItem.price,
-        quantity: cartItem.quantity,
-        cartId: cartItem.cartId,
-      });
+      .values({ ...cartItem });
   }
 }

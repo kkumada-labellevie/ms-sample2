@@ -1,8 +1,8 @@
-## 起動メモ (後でDockerで設定する)
-### Kafka起動
+# 起動メモ (後でDockerで設定する)
+## Kafka起動
 `cd ms-sample/kafka`  
 `docker compose up`  
-### ms1起動
+## ms1起動
 `cd ms-sample/ms1`  
 `docker compose up --build`  
 `docker exec -it ms1-app sh`  
@@ -18,7 +18,7 @@
 `FLUSH PRIVILEGES;`  
 `exit`  
 `exit`  
-### ms1DBとDebeziumの連携
+## ms1DBとDebeziumの連携
 ```
 curl -X POST -H "Content-Type: application/json" \
 --data '{
@@ -44,7 +44,7 @@ curl -X POST -H "Content-Type: application/json" \
 }' \
 http://localhost:8083/connectors
 ```
-### ms2起動
+## ms2起動
 `cd ms-sample/ms2`  
 `docker compose up --build`  
 `docker exec -it ms2-app sh`  
@@ -60,7 +60,7 @@ http://localhost:8083/connectors
 `FLUSH PRIVILEGES;`  
 `exit`  
 `exit`  
-### ms2DBとDebeziumの連携
+## ms2DBとDebeziumの連携
 ```
 curl -X POST -H "Content-Type: application/json" \
 --data '{
@@ -86,6 +86,19 @@ curl -X POST -H "Content-Type: application/json" \
 }' \
 http://localhost:8083/connectors
 ```
-### bff起動
+## bff起動
 `cd ms-sample/bff`  
 `docker compose up --build`  
+## URL
+### Kafka UI
+http://localhost:8080/
+### Debezium
+http://localhost:8083/connectors  
+http://localhost:8083/connectors/mysql-connector-ms1/status  
+http://localhost:8083/connectors/mysql-connector-ms2/status  
+### ms1
+http://localhost:3333/
+### ms2
+http://localhost:3334/
+### bff
+http://localhost:3000/
