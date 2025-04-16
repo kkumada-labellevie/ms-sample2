@@ -5,7 +5,7 @@
   const carts = data.carts;
 </script>
 
-<h1 class="text-xl mb-2">Get Carts Page</h1>
+<h1 class="text-xl mb-4">Get Carts Page</h1>
 
 <table class="border">
   <thead>

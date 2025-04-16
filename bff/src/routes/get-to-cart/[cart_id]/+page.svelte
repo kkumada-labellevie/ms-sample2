@@ -5,7 +5,7 @@
   let cart = data.cart;
 </script>
 
-<h1 class="text-xl">Get Cart Page</h1>
+<h1 class="text-xl  mb-4">Get Cart Page</h1>
 
 <table class="border">
   <thead>
