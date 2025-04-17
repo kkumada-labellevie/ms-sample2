@@ -124,6 +124,8 @@ services:
     platform: linux/x86_64
     image: debezium/connect:2.6
     container_name: debezium
+    ulimits:
+      core: -1
     ports:
       - '8083:8083'
     networks:
@@ -139,6 +141,7 @@ services:
       - CONFIG_STORAGE_TOPIC=my-connect-configs
       - OFFSET_STORAGE_TOPIC=my-connect-offsets
       - STATUS_STORAGE_TOPIC=my-connect-statuses
+      - JAVA_OPTS=-XX:+UnlockDiagnosticVMOptions
 
   zookeeper:
     platform: linux/x86_64

@@ -8,7 +8,7 @@ export const carts = mysqlTable('carts', {
 });
 
 export const cartsRelations = relations(carts, ({ many }) => ({
-	cartItems: many(cartItems),
+  cartItems: many(cartItems),
 }));
 
 export const cartItems = mysqlTable('cart_items', {
@@ -20,5 +20,5 @@ export const cartItems = mysqlTable('cart_items', {
 });
 
 export const cartItemsRelations = relations(cartItems, ({ one }) => ({
-	cart: one(carts, { fields: [cartItems.cartId], references: [carts.id] }),
+  cart: one(carts, { fields: [cartItems.cartId], references: [carts.id] }),
 }));
