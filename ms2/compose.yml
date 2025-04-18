@@ -8,13 +8,13 @@ services:
       - 3334:3000
     volumes:
       - .:/usr/src/app
+      - ./docker/entrypoint.sh:/usr/src/app/entrypoint.sh
       - /usr/src/app/node_modules
     networks:
       - ms-network
     depends_on:
       ms2-mysql:
         condition: service_healthy
-    command: npm run start:dev
 
   ms2-mysql:
     platform: linux/x86_64
@@ -24,6 +24,7 @@ services:
       - 3307:3306
     volumes:
       - ./mysql/my.cnf:/etc/mysql/my.cnf
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
       - /var/lib/mysql
     networks:
       - ms-network
