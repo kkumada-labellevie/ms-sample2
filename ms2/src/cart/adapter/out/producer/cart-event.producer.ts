@@ -1,10 +1,9 @@
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
-import { ClientKafka, KafkaHeaders } from '@nestjs/microservices';
+import { Inject, Injectable } from '@nestjs/common';
+import { ClientKafka } from '@nestjs/microservices';
 import { KafkaService } from '../../../../kafka.service';
 import { ThisError } from '../../../../error/this-error';
 import { AddedToCartStateEventMessage } from '../../../application/port/out/added-to-cart-state.event.message';
 import { CartEventProducerPort } from '../../../application/port/out/cart-event-producer.port';
-import { randomUUID } from 'crypto';
 
 /**
  * KafkaのトピックID

@@ -1,14 +1,14 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { MySql2Database } from 'drizzle-orm/mysql2';
 import { eq } from 'drizzle-orm';
-import { FindCartPort } from 'src/cart/application/port/out/find-cart.port';
+import { GetCartPort } from '../../../application/port/out/get-cart.port';
 import { SaveCartPort } from '../../../application/port/out/save-cart.port';
 import * as schema from '../../../../db/schema';
 
 @Injectable()
-export class CartRepository implements FindCartPort, SaveCartPort {
+export class CartRepository implements GetCartPort, SaveCartPort {
   constructor(
-    @Inject('DB_DEV') private readonly drizzle: MySql2Database<typeof schema>,
+    @Inject('DB_DEV') private readonly drizzle: MySql2Database<typeof schema>
   ) {}
 
   async findAll() {

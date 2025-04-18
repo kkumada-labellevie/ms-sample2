@@ -1,0 +1,7 @@
+FROM debezium/connect:2.6.1.Final
+
+USER root
+
+RUN microdnf install -y java-17-openjdk
+
+USER 1001

@@ -9,7 +9,7 @@ import { AddToCartUseCase } from '../../../application/port/in/add-to-cart.useca
 export class AddToCartController {
   // APIが実行すべきユースケースをDIする
   constructor(
-    @Inject('AddToCartService') private readonly addToCartService: AddToCartUseCase,
+    @Inject('AddToCartService') private readonly addToCartService: AddToCartUseCase
   ) {}
 
   @Post()

@@ -3,8 +3,10 @@
  * このコマンドは、カートに商品を追加するために使用される
  * コマンドはアダプタに実装される（外部からリクエストされるものであるため）
  */
-export interface AddToCartCommand {
+export interface AddToCartItemCommand {
   id: number;
-  userUuid: string;
-  cartCode: string;
+  skuCode: string;
+  price: number;
+  quantity: number;
+  cartId: number;
 }

@@ -6,6 +6,8 @@ services:
     container_name: bff
     ports:
       - 3000:3000
+      - 4173:4173
+      - 6006:6006
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules

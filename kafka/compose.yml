@@ -122,7 +122,9 @@ services:
 
   debezium:
     platform: linux/x86_64
-    image: debezium/connect:2.6
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev
     container_name: debezium
     ulimits:
       core: -1

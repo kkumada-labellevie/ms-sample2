@@ -1,45 +1,31 @@
 import { ValidationError } from '../../../../error/validation-error';
-import { AddToCartCommand } from '../../../application/port/in/add-to-cart.command';
+import { GetToCartCommand } from '../../../application/port/in/get-to-cart.command';
 
 /**
  * 外部からリクエストするためのコマンド
  * 入力用インターフェースを実装する
  */
-export class AddToCartCommandRequest implements AddToCartCommand {
+export class GetToCartCommandRequest implements GetToCartCommand {
   private constructor(
-    public readonly id: number,
-    public readonly userUuid: string,
-    public readonly cartCode: string
-) {}
+      public readonly cartId: number
+  ) {}
 
   /**
    * コマンドを生成するための名前付きコンストラクタ
    * リクエストのため、バリデーションも行う
    *
-   * @param id
-   * @param userUuid
-   * @param cartCode
+   * @param cartId
    * @returns
    */
-  public static createCommand(
-    id: number,
-    userUuid: string,
-    cartCode: string
-  ): [AddToCartCommand, null] | [null, ValidationError[]] {
+  public static createCommand(cartId: number): [GetToCartCommand, null] | [null, ValidationError[]] {
     const errors: ValidationError[] = [];
 
     // バリデーション
     // バリデーションエラーは全て返す様にする
     // このエラーはログに残すことは考えていないが、呼び出し側が表示する可能性がある。
     // @TODO: バリデーションエラーに持たせるべき情報を考える
-    if (!id) {
-      errors.push(new ValidationError('id', 'id is required'));
-    }
-    if (!userUuid) {
-      errors.push(new ValidationError('userUuid', 'userUuid is required'));
-    }
-    if (!cartCode) {
-      errors.push(new ValidationError('cartCode', 'cartCode is required'));
+    if (!cartId) {
+      errors.push(new ValidationError('cartId', 'cartId is required'));
     }
 
     // バリデーションに1件でも引っかかればエラーとする
@@ -48,6 +34,6 @@ export class AddToCartCommandRequest implements AddToCartCommand {
     }
 
     // エラーがない場合は、コマンドを含むTupleを返す
-    return [new AddToCartCommandRequest(id, userUuid, cartCode), null];
+    return [new GetToCartCommandRequest(cartId), null];
   }
 }

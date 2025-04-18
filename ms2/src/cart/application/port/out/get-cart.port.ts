@@ -1,11 +1,8 @@
-import { ThisError } from '../../../../error/this-error';
-
 /**
  * 出力用ポート
  * アダプタが実装する
  */
-export interface FindCartPort {
+export interface GetCartPort {
   findAll();
-
   findOne(id: number);
 }

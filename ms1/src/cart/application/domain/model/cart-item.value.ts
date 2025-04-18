@@ -69,4 +69,3 @@ export class CartItem {
     return this.qty;
   }
 }
-
