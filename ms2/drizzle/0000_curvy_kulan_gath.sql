@@ -3,7 +3,7 @@ CREATE TABLE `cart_items` (
 	`sku_code` varchar(256),
 	`price` int,
 	`quantity` int,
-	`cart_id` int,
+	`cart_id` bigint unsigned,
 	CONSTRAINT `cart_items_id` PRIMARY KEY(`id`)
 );
 --> statement-breakpoint

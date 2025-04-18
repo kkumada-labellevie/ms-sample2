@@ -1,4 +1,4 @@
-import { mysqlTable, serial, varchar, int } from 'drizzle-orm/mysql-core';
+import { mysqlTable, serial, varchar, int, bigint } from 'drizzle-orm/mysql-core';
 import { relations } from 'drizzle-orm';
 
 export const carts = mysqlTable('carts', {
@@ -16,7 +16,7 @@ export const cartItems = mysqlTable('cart_items', {
   skuCode: varchar('sku_code', { length: 256 }),
   price: int('price'),
   quantity: int('quantity'),
-  cartId: int('cart_id').references(() => carts.id),
+  cartId: bigint('cart_id', { mode: 'number', unsigned: true }).references(() => carts.id),
 });
 
 export const cartItemsRelations = relations(cartItems, ({ one }) => ({

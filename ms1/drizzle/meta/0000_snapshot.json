@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "54d16741-3497-475f-8290-8ae558cdba90",
+  "id": "2285ec4b-a2f8-4584-8adc-98841d6c4a7d",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "cart_items": {
@@ -37,7 +37,7 @@
         },
         "cart_id": {
           "name": "cart_id",
-          "type": "int",
+          "type": "bigint unsigned",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
