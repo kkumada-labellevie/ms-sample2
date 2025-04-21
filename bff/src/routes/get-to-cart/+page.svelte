@@ -2,7 +2,7 @@
   import type { PageProps } from './$types';
 
   let { data }: PageProps = $props();
-  const { carts } = data;
+  let { carts } = data;
 </script>
 
 <h1 class="text-xl mb-4">Get Carts Page</h1>
