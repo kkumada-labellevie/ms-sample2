@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { AddToCartService } from './application/domain/service/add-to-cart.service';
+import { DeleteToCartService } from './application/domain/service/delete-to-cart.service';
 import { StockService } from './adapter/out/service/stock.service';
 import { CartRepository } from './adapter/out/repository/cart.repository';
 import { CartEventProducer } from './adapter/out/producer/cart-event.producer';
-import { AddToCartController } from './adapter/in/web/add-to-cart.controller';
+import { CartController } from './adapter/in/web/cart.controller';
 
 @Module({
   imports: [
@@ -25,12 +26,16 @@ import { AddToCartController } from './adapter/in/web/add-to-cart.controller';
     ])
   ],
   controllers: [
-    AddToCartController,
+    CartController,
   ],
   providers: [
     {
       provide: 'AddToCartService',
       useClass: AddToCartService,
+    },
+    {
+      provide: 'DeleteToCartService',
+      useClass: DeleteToCartService,
     },
     {
       provide: 'StockService',

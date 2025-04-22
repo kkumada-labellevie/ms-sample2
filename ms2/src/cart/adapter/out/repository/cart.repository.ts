@@ -3,10 +3,11 @@ import { MySql2Database } from 'drizzle-orm/mysql2';
 import { eq } from 'drizzle-orm';
 import { GetCartPort } from '../../../application/port/out/get-cart.port';
 import { SaveCartPort } from '../../../application/port/out/save-cart.port';
+import { DeleteCartPort } from '../../../application/port/out/delete-cart.port';
 import * as schema from '../../../../db/schema';
 
 @Injectable()
-export class CartRepository implements GetCartPort, SaveCartPort {
+export class CartRepository implements GetCartPort, SaveCartPort, DeleteCartPort {
   constructor(
     @Inject('DB_DEV') private readonly drizzle: MySql2Database<typeof schema>
   ) {}
@@ -56,7 +57,7 @@ export class CartRepository implements GetCartPort, SaveCartPort {
     userUuid: string;
     cartCode: string;
   }): Promise<void> {
-    const carts = await this.drizzle
+    await this.drizzle
       .insert(schema.carts)
       .values({ ...cart });
   }
@@ -71,5 +72,21 @@ export class CartRepository implements GetCartPort, SaveCartPort {
     await this.drizzle
       .insert(schema.cartItems)
       .values({ ...cartItem });
+  }
+
+  async deleteCart(cart: {
+    cartId: number;
+  }): Promise<void> {
+    await this.drizzle
+      .delete(schema.carts)
+      .where(eq(schema.carts.id, cart.cartId));
+  }
+
+  async deleteCartItem(cart: {
+    cartId: number;
+  }): Promise<void> {
+    await this.drizzle
+      .delete(schema.cartItems)
+      .where(eq(schema.cartItems.cartId, cart.cartId));
   }
 }

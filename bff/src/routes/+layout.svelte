@@ -14,6 +14,9 @@
       <a href="/add-to-cart" class="text-blue-700 underline hover:no-underline">Add cart</a>
     </li>
     <li>
+      <a href="/delete-to-cart" class="text-blue-700 underline hover:no-underline">Delete cart</a>
+    </li>
+    <li>
       <a href="/get-to-cart" class="text-blue-700 underline hover:no-underline">Get carts</a>
     </li>
     <li>

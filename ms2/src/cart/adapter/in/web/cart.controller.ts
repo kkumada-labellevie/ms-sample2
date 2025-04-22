@@ -1,22 +1,51 @@
-import { Controller, Inject } from '@nestjs/common';
+import { Controller, Get, Param, Inject } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
+import { GetToCartCommandRequest } from '../command/get-to-cart.command.request';
 import { AddToCartItemCommandRequest } from '../command/add-to-cart-item.command.request';
 import { AddToCartCommandRequest } from '../command/add-to-cart.command.request';
+import { DeleteToCartCommandRequest } from '../command/delete-to-cart.command.request';
+import { GetToCartUseCase } from '../../../application/port/in/get-to-cart.usecase';
 import { AddToCartUseCase } from '../../../application/port/in/add-to-cart.usecase';
+import { DeleteToCartUseCase } from '../../../application/port/in/delete-to-cart.usecase';
 
 /**
  * APIのエンドポイント
  */
-@Controller('add-to-cart')
-export class AddToCartController {
+@Controller('get-to-cart')
+export class CartController {
   // APIが実行すべきユースケースをDIする
   constructor(
-    @Inject('AddToCartService') private readonly addToCartService: AddToCartUseCase
+    @Inject('GetToCartService') private readonly getToCartService: GetToCartUseCase,
+    @Inject('AddToCartService') private readonly addToCartService: AddToCartUseCase,
+    @Inject('DeleteToCartService') private readonly deleteToCartService: DeleteToCartUseCase
   ) {}
+
+  @Get()
+  // @TODO 本来はもっと実装が必要
+  public async getToCarts() {
+    return this.getToCartService.getItems();
+  }
+
+  @Get(':userId')
+  // @TODO 本来はもっと実装が必要
+  public async getToCart(@Param('userId') id: number) {
+    const [cmd, cmdError] = GetToCartCommandRequest.createCommand(id);
+    // このエラーはバリデーションエラー
+    if (cmdError) {
+      // @TODO エラーレスポンスを返す
+      return
+    }
+
+    return this.getToCartService.getItem(cmd)
+  }
 
   @MessagePattern('dbserver1.ms_db.cart_items')
   async handleCartItemsEvent(@Payload() message: any) {
     const { payload } = message;
+
+    if (!payload) {
+      return;
+    }
 
     // 例：データの種類を判定
     if (payload.op === 'c') {
@@ -32,7 +61,7 @@ export class AddToCartController {
         // @TODO エラーレスポンスを返す
         return;
       }
-  
+
       // ユースケースを実行
       const error = await this.addToCartService.addCartItem(cmd);
       console.log('Received CDC event Cart Item Created:', payload.after);
@@ -42,6 +71,10 @@ export class AddToCartController {
   @MessagePattern('dbserver1.ms_db.carts')
   async handleCartsEvent(@Payload() message: any) {
     const { payload } = message;
+
+    if (!payload) {
+      return;
+    }
 
     // 例：データの種類を判定
     if (payload.op === 'c') {
@@ -59,6 +92,22 @@ export class AddToCartController {
       // ユースケースを実行
       const error = await this.addToCartService.addItem(cmd);
       console.log('Received CDC event Cart Created:', payload.after);
+    }
+
+    if (payload.op === 'd') {
+      const [cmd, cmdError] = DeleteToCartCommandRequest.createCommand(
+        payload.before.id
+      );
+      // このエラーはバリデーションエラー
+      if (cmdError) {
+        // @TODO エラーレスポンスを返す
+        return;
+      }
+
+      // ユースケースを実行
+      await this.deleteToCartService.deleteCartItem(cmd);
+      await this.deleteToCartService.deleteItem(cmd);
+      console.log('Received CDC event Cart Deleted:', payload.before);
     }
   }
 }
