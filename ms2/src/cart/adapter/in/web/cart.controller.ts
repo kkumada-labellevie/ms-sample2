@@ -41,9 +41,17 @@ export class CartController {
 
   @MessagePattern('dbserver1.ms_db.cart_items')
   async handleCartItemsEvent(@Payload() message: any) {
+    if (!message) {
+      return;
+    }
+
     const { payload } = message;
 
     if (!payload) {
+      return;
+    }
+
+    if (!payload.op) {
       return;
     }
 
@@ -70,9 +78,17 @@ export class CartController {
 
   @MessagePattern('dbserver1.ms_db.carts')
   async handleCartsEvent(@Payload() message: any) {
+    if (!message) {
+      return;
+    }
+
     const { payload } = message;
 
     if (!payload) {
+      return;
+    }
+
+    if (!payload.op) {
       return;
     }
 
