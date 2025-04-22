@@ -5,7 +5,7 @@
 </script>
 
 <nav class="flex flex-col gap-2 mb-10">
-  <h2 class="text-lg">Navigation</h2>
+  <h2 class="text-lg">Navigation(By Kumada)</h2>
   <ul>
     <li>
       <a href="/" class="text-blue-700 underline hover:no-underline">Home</a>
