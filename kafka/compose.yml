@@ -138,7 +138,7 @@ services:
       broker2:
         condition: service_healthy
     environment:
-      - BOOTSTRAP_SERVERS=broker1:9092,broker2:9093
+      - BOOTSTRAP_SERVERS=broker1:29092,broker2:29092
       - GROUP_ID=1
       - CONFIG_STORAGE_TOPIC=my-connect-configs
       - OFFSET_STORAGE_TOPIC=my-connect-offsets
