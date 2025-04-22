@@ -69,6 +69,15 @@ export class CartRepository implements GetCartPort, SaveCartPort, DeleteCartPort
     quantity: number;
     cartId: number;
   }): Promise<void> {
+    let cart;
+    while(!cart) {
+      cart = await this.drizzle.query.carts.findFirst({
+        where(fields) {
+          return eq(fields.id, cartItem.cartId);
+        },
+      });
+    }
+
     await this.drizzle
       .insert(schema.cartItems)
       .values({ ...cartItem });
