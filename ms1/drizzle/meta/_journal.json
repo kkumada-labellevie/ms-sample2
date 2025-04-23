@@ -1,12 +1,12 @@
 {
   "version": "7",
-  "dialect": "mysql",
+  "dialect": "postgresql",
   "entries": [
     {
       "idx": 0,
-      "version": "5",
-      "when": 1744941389254,
-      "tag": "0000_chemical_chameleon",
+      "version": "7",
+      "when": 1745376909998,
+      "tag": "0000_lame_raza",
       "breakpoints": true
     }
   ]

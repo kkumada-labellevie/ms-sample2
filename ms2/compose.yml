@@ -13,31 +13,37 @@ services:
     networks:
       - ms-network
     depends_on:
-      ms2-mysql:
+      ms2-postgres:
         condition: service_healthy
+    environment:
+      DATABASE_HOST: ms2-postgres
+      DATABASE_PORT: 5432
+      DATABASE_USER: admin
+      DATABASE_PASSWORD: admin
+      DATABASE_NAME: ms_db
+      DATABASE_SSL: false
 
-  ms2-mysql:
+  ms2-postgres:
     platform: linux/x86_64
-    image: mysql:8.0
-    container_name: ms2-mysql
+    image: postgres:15
+    container_name: ms2-postgres
     ports:
-      - 3307:3306
+      - 5433:5432
     volumes:
-      - ./mysql/my.cnf:/etc/mysql/my.cnf
-      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
-      - /var/lib/mysql
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./postgres/postgresql.conf:/etc/postgresql/postgresql.conf
+    command: postgres -c config_file=/etc/postgresql/postgresql.conf
     networks:
       - ms-network
     healthcheck:
-      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      test: ["CMD", "pg_isready", "-q", "-d", "ms_db", "-U", "admin"]
       interval: 10s
       timeout: 5s
-      retries: 3
+      retries: 5
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: ms_db
-      MYSQL_USER: admin
-      MYSQL_PASSWORD: admin
+      POSTGRES_DB: ms_db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
 
 networks:
   ms-network:

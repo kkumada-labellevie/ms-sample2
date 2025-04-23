@@ -24,7 +24,7 @@
     "drizzle:drop": "npx drizzle-kit drop"
   },
   "dependencies": {
-    "@knaadh/nestjs-drizzle-mysql2": "^1.2.0",
+    "@knaadh/nestjs-drizzle-pg": "^1.2.0",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^10.0.0",
@@ -34,7 +34,7 @@
     "class-validator": "^0.14.1",
     "drizzle-orm": "^0.41.0",
     "kafkajs": "^2.2.4",
-    "mysql2": "^3.14.0",
+    "postgres": "^3.4.5",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1"
   },

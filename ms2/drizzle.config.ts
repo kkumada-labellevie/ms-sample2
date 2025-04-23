@@ -1,14 +1,15 @@
 import { defineConfig } from 'drizzle-kit';
 
 export default defineConfig({
-  dialect: 'mysql',
+  dialect: 'postgresql',
   schema: './src/db/schema.ts',
   out: './drizzle',
   dbCredentials: {
-    host: 'ms2-mysql',
+    host: 'ms2-postgres',
     user: 'admin',
     password: 'admin',
-    port: 3306,
+    port: 5432,
     database: 'ms_db',
+    ssl: false,
   },
 });

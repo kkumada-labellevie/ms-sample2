@@ -39,7 +39,7 @@ export class CartController {
     return this.getToCartService.getItem(cmd)
   }
 
-  @MessagePattern('dbserver1.ms_db.cart_items')
+  @MessagePattern('dbserver1.public.cart_items')
   async handleCartItemsEvent(@Payload() message: any) {
     if (!message) {
       return;
@@ -76,7 +76,7 @@ export class CartController {
     }
   }
 
-  @MessagePattern('dbserver1.ms_db.carts')
+  @MessagePattern('dbserver1.public.carts')
   async handleCartsEvent(@Payload() message: any) {
     if (!message) {
       return;

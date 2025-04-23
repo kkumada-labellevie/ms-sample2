@@ -8,6 +8,8 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 
+COPY postgres/postgresql.conf /etc/postgresql/postgresql.conf
+
 RUN npm install
 
 COPY . .

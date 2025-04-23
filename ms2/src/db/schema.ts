@@ -1,7 +1,14 @@
-import { mysqlTable, serial, varchar, int, bigint } from 'drizzle-orm/mysql-core';
+import {
+  pgTable,
+  serial,
+  text,
+  integer,
+  bigint,
+  varchar,
+} from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 
-export const carts = mysqlTable('carts', {
+export const carts = pgTable('carts', {
   id: serial('id').primaryKey(),
   userUuid: varchar('user_uuid', { length: 256 }),
   cartCode: varchar('cart_code', { length: 256 }),
@@ -11,14 +18,17 @@ export const cartsRelations = relations(carts, ({ many }) => ({
   cartItems: many(cartItems),
 }));
 
-export const cartItems = mysqlTable('cart_items', {
+export const cartItems = pgTable('cart_items', {
   id: serial('id').primaryKey(),
   skuCode: varchar('sku_code', { length: 256 }),
-  price: int('price'),
-  quantity: int('quantity'),
-  cartId: bigint('cart_id', { mode: 'number', unsigned: true }).references(() => carts.id),
+  price: integer('price'),
+  quantity: integer('quantity'),
+  cartId: bigint('cart_id', { mode: 'number' }).references(() => carts.id),
 });
 
 export const cartItemsRelations = relations(cartItems, ({ one }) => ({
-  cart: one(carts, { fields: [cartItems.cartId], references: [carts.id] }),
+  cart: one(carts, {
+    fields: [cartItems.cartId],
+    references: [carts.id],
+  }),
 }));

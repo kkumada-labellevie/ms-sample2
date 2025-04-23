@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { MySql2Database } from 'drizzle-orm/mysql2';
+import { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import { eq } from 'drizzle-orm';
 import { GetCartPort } from '../../../application/port/out/get-cart.port';
 import { SaveCartPort } from '../../../application/port/out/save-cart.port';
@@ -9,7 +9,7 @@ import * as schema from '../../../../db/schema';
 @Injectable()
 export class CartRepository implements GetCartPort, SaveCartPort, DeleteCartPort {
   constructor(
-    @Inject('DB_DEV') private readonly drizzle: MySql2Database<typeof schema>
+    @Inject('DB_DEV') private readonly drizzle: PostgresJsDatabase<typeof schema>,
   ) {}
 
   async findAll() {
@@ -37,16 +37,18 @@ export class CartRepository implements GetCartPort, SaveCartPort, DeleteCartPort
     items: { skuCode: string; price: number; quantity: number }[];
   }): Promise<void> {
     const { userUuid, cartCode, items } = cart;
-    const carts = await this.drizzle
+    const insertedCarts = await this.drizzle
       .insert(schema.carts)
       .values({ userUuid, cartCode })
-      .$returningId();
+      .returning({ id: schema.carts.id });
+
+    const cartId = insertedCarts[0].id;
 
     for (const item of items) {
       await this.drizzle
         .insert(schema.cartItems)
         .values({
-          cartId: carts[0].id,
+          cartId,
           ...item,
         });
     }
@@ -70,7 +72,7 @@ export class CartRepository implements GetCartPort, SaveCartPort, DeleteCartPort
     cartId: number;
   }): Promise<void> {
     let cart;
-    while(!cart) {
+    while (!cart) {
       cart = await this.drizzle.query.carts.findFirst({
         where(fields) {
           return eq(fields.id, cartItem.cartId);

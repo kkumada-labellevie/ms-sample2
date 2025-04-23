@@ -108,13 +108,13 @@ services:
       /bin/bash -c "
       /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic __consumer_offsets --replication-factor=2 --partitions=50 --bootstrap-server broker1:9092 &&
       /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic dbserver1 --replication-factor=1 --partitions=1 --bootstrap-server broker1:9092 &&
-      /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic dbserver1.ms_db.carts --replication-factor=1 --partitions=1 --bootstrap-server broker1:9092 &&
-      /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic dbserver1.ms_db.carts.reply --replication-factor=1 --partitions=1 --bootstrap-server broker1:9092 &&
-      /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic dbserver1.ms_db.cart_items --replication-factor=1 --partitions=1 --bootstrap-server broker1:9092 &&
+      /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic dbserver1.public.carts --replication-factor=1 --partitions=1 --bootstrap-server broker1:9092 &&
+      /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic dbserver1.public.carts.reply --replication-factor=1 --partitions=1 --bootstrap-server broker1:9092 &&
+      /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic dbserver1.public.cart_items --replication-factor=1 --partitions=1 --bootstrap-server broker1:9092 &&
       /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic dbserver2 --replication-factor=1 --partitions=1 --bootstrap-server broker1:9092 &&
-      /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic dbserver2.ms_db.carts --replication-factor=1 --partitions=1 --bootstrap-server broker1:9092 &&
-      /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic dbserver2.ms_db.carts.reply --replication-factor=1 --partitions=1 --bootstrap-server broker1:9092 &&
-      /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic dbserver2.ms_db.cart_items --replication-factor=1 --partitions=1 --bootstrap-server broker1:9092 &&
+      /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic dbserver2.public.carts --replication-factor=1 --partitions=1 --bootstrap-server broker1:9092 &&
+      /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic dbserver2.public.carts.reply --replication-factor=1 --partitions=1 --bootstrap-server broker1:9092 &&
+      /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic dbserver2.public.cart_items --replication-factor=1 --partitions=1 --bootstrap-server broker1:9092 &&
       /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic my-connect-configs --replication-factor=1 --partitions=1 --config cleanup.policy=compact --bootstrap-server broker1:9092 &&
       /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic my-connect-offsets --replication-factor=1 --partitions=1 --config cleanup.policy=compact --bootstrap-server broker1:9092 &&
       /opt/kafka/bin/kafka-topics.sh --create --if-not-exists --topic my-connect-statuses --replication-factor=1 --partitions=1 --config cleanup.policy=compact --bootstrap-server broker1:9092
@@ -143,7 +143,8 @@ services:
       - CONFIG_STORAGE_TOPIC=my-connect-configs
       - OFFSET_STORAGE_TOPIC=my-connect-offsets
       - STATUS_STORAGE_TOPIC=my-connect-statuses
-      - JAVA_OPTS=-XX:+UnlockDiagnosticVMOptions
+      - JAVA_OPTS=-Xms512m -Xmx1024m -XX:+UseG1GC -XX:+ExitOnOutOfMemoryError
+
 
   zookeeper:
     platform: linux/x86_64

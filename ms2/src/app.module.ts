@@ -2,26 +2,30 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CartModule } from './cart/cart.module';
-import { DrizzleMySqlModule } from '@knaadh/nestjs-drizzle-mysql2';
+import { DrizzlePGModule } from '@knaadh/nestjs-drizzle-pg';
 import * as schema from './db/schema';
 
 @Module({
   imports: [
-    DrizzleMySqlModule.registerAsync({
+    DrizzlePGModule.registerAsync({
       tag: 'DB_DEV',
       useFactory() {
         return {
-          mysql: {
+          pg: {
             connection: 'client',
             config: {
-              host: 'ms2-mysql',
-              port: 3306,
+              host: 'ms2-postgres',
               user: 'admin',
               password: 'admin',
               database: 'ms_db',
+              port: 5432,
+              ssl: false,
             },
           },
-          config: { schema: { ...schema }, mode: 'default' },
+          config: {
+            schema,
+            mode: 'default',
+          },
         };
       },
     }),

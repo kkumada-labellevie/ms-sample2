@@ -10,7 +10,7 @@ import { CartEventProducerPort } from '../../../application/port/out/cart-event-
  * 別の場所でまとめて定義しておく方が良いと考えている
  */
 const topicIds = {
-  ADDED_TO_CART: 'dbserver1.ms_db.carts',
+  ADDED_TO_CART: 'dbserver1.public.carts',
 };
 
 /**
