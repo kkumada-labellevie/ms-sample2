@@ -11,7 +11,13 @@ export async function DELETE({ request }) {
     body: JSON.stringify(body),
   });
 
-  return json({
-    success: true,
-  });
+  if(!response.ok) {
+    return json({
+      success: false,
+    });
+  }else {
+    return json({
+      success: true,
+    });
+  }
 }

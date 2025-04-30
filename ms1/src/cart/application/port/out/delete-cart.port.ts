@@ -8,4 +8,5 @@ export interface DeleteCartPort {
   deleteItem(cart: {
     cartId: number;
   }): Promise<void | ThisError>;
+  findOne(id: number);
 }

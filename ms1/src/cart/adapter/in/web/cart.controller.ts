@@ -1,4 +1,4 @@
-import { Controller, Post, Delete, Body, Inject } from '@nestjs/common';
+import { Controller, Post, Delete, Body, Inject, HttpException, HttpStatus } from '@nestjs/common';
 import { AddToCartCommandRequest } from '../command/add-to-cart.command.request';
 import { DeleteToCartCommandRequest } from '../command/delete-to-cart.command.request';
 import { AddToCartUseCase } from '../../../application/port/in/add-to-cart.usecase';
@@ -27,24 +27,34 @@ export class CartController {
     // このエラーはバリデーションエラー
     if (cmdError) {
       // @TODO エラーレスポンスを返す
-      return
+      throw new HttpException('Validation error', HttpStatus.BAD_REQUEST);
     }
 
     // ユースケースを実行
     const error = await this.addToCartService.addItem(cmd);
+    if (error) {
+      throw new HttpException('Failed to add item to cart', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   @Delete('delete-to-cart')
   // @TODO 本来はもっと実装が必要
-  public async deleteToCart(@Body() request: any): Promise<void> {
+  public async deleteToCart(@Body() request: any) {
     const [cmd, cmdError] = DeleteToCartCommandRequest.createCommand(request.cartId);
     // このエラーはバリデーションエラー
     if (cmdError) {
-      // @TODO エラーレスポンスを返す
-      return
+      console.log(cmdError);
+      throw new HttpException('Validation error', HttpStatus.BAD_REQUEST);
     }
 
     // ユースケースを実行
     const error = await this.deleteToCartService.deleteItem(cmd);
+    if (error) {
+      throw new HttpException('Failed to delete item from cart', HttpStatus.INTERNAL_SERVER_ERROR);
+      // return {status: 'error', message: 'Failed to delete item from cart'};
+      // throw new HttpException('Failed to delete item from cart', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  
+
   }
 }

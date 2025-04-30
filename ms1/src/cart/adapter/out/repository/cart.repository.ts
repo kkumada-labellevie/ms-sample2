@@ -51,4 +51,16 @@ export class CartRepository implements SaveCartPort, DeleteCartPort {
 
     console.log('Cart deleted');
   }
+
+  async findOne(id: number) {
+    return await this.drizzle.query.carts.findFirst({
+      with: {
+        cartItems: true,
+      },
+      where(fields) {
+        return eq(fields.id, id);
+      },
+    });
+  }
+
 }

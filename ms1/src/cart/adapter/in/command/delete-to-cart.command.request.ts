@@ -28,6 +28,7 @@ export class DeleteToCartCommandRequest implements DeleteToCartCommand {
     // @TODO: バリデーションエラーに持たせるべき情報を考える
     if (!cartId) {
       errors.push(new ValidationError('cartId', 'cartId is required'));
+      console.log('cartId is required');
     }
 
     // バリデーションに1件でも引っかかればエラーとする
